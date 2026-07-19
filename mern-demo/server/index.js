@@ -74,6 +74,20 @@ app.delete("/users/:id" , async (req, res) => {
     }
 });
 
+app.put("/users/:id", async (req, res) => {
+    const validUser = await User.findById(req.params.id);
+    if (!validUser){
+        return res.json({message: "User not found"})
+    } else {
+        validUser.name = req.body.name;
+        validUser.email = req.body.email;
+        validUser.password = req.body.password;
+
+        await validUser.save();
+        return res.json({message: "Successful"})
+    }
+});
+
 app.listen(5000, () => {
     console.log("Server is running on port 5000");
 })
