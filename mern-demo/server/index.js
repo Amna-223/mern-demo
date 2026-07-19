@@ -62,6 +62,18 @@ app.post("/submit", async (req, res) => {
     }
 });
 
+app.delete("/users/:id" , async (req, res) => {
+    console.log(req.params.id);
+    const validUser = await User.findById(req.params.id);
+    console.log(validUser);
+    if (!validUser){
+        return res.json({message: "User Not found"})
+    } else {
+        await validUser.deleteOne()
+        return res.json({message: "Successful"})
+    }
+});
+
 app.listen(5000, () => {
     console.log("Server is running on port 5000");
 })
