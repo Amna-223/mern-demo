@@ -26,13 +26,40 @@ app.get("/", (req, res) => {
     res.send("Hello World!")
 });
 
-app.post("/submit", async (req, res) => {
-    console.log(req.body);
-    await User.create(req.body);
+app.get("/users", async (req, res) => {
+    try{
+        const users = await User.find();
+        if (users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No users found!"
+            });
+        }
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong!"
+        })
+    }
+})
 
-    res.json(
-        {message: "Data Received successfully!"}
-    );
+app.post("/submit", async (req, res) => {
+    try{
+        console.log(req.body);
+        await User.create(req.body);
+
+        res.status(201).json({
+            success: true,
+            message: "Data Received successfully!",
+            data: User        
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong!"
+        });
+    }
 });
 
 app.listen(5000, () => {

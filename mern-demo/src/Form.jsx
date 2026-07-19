@@ -8,6 +8,8 @@ const Form = () => {
     email: ''
   })
 
+  const [message, setMessage] = useState('')
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     const response = await fetch("http://localhost:5000/submit" , {
@@ -18,8 +20,13 @@ const Form = () => {
       body: JSON.stringify(formData)
     });
 
-    const data = await response.json();
-    console.log(data);
+    try{
+      const data = await response.json();
+      console.log(data);
+      setMessage(data.message);
+    } catch (error) {
+      setMessage("Unable to connect to server.");
+    }
 
     setFormData({
       name: "",
@@ -48,6 +55,8 @@ const Form = () => {
 
             <input type="submit" value="Submit" />
         </form>
+
+        <p>{message}</p>
     </>
   )
 }

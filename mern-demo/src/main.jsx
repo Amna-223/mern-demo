@@ -7,3 +7,9 @@ createRoot(document.getElementById('root')).render(
     <Form />
   </StrictMode>
 )
+
+createRoot(document.getElementById('users')).render(
+  <StrictMode>
+    <UsersList />
+  </StrictMode>
+)
