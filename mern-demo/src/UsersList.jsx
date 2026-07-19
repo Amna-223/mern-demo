@@ -4,6 +4,7 @@ const Users = () => {
     const [user, setUser] = useState([])
     const [message, setMessage] = useState('')
     const [delMsg, setDelMsg] = useState('')
+    const [updateMsg, setUpdateMsg] = useState('')
     const [updateData, setUpdateData] = useState({
         name: "", email: "", password: "" });
     const [showForm, setShowForm] = useState(false);
@@ -20,11 +21,6 @@ const Users = () => {
         } catch (error) {
             setMessage("Something Went wrong!")
         }
-    }
-
-    const updateUser = async (user) => {
-        setUpdateData(user);
-        setShowForm(true);
     }
 
     const deleteUser = async (id) => {
@@ -44,12 +40,18 @@ const Users = () => {
         }
     }
 
+    const updateUser = async (user) => {
+        setUpdateData(user);
+        setShowForm(true);
+    }
+
     const handleUpdateChange = async (event) => {
         setUpdateData({...updateData, [event.target.name]: event.target.value})
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setUpdateMsg("");
         const response = await fetch(`http://localhost:5000/users/${updateData._id}` , {
             method: "PUT",
             headers: {
@@ -58,8 +60,15 @@ const Users = () => {
             body: JSON.stringify(updateData)
         });
 
-        const data = await response.text()
-        console.log(data)
+        try{
+            const data = await response.json()
+            console.log(data)
+            setUpdateMsg("User updated successfully!");
+            setShowForm(false);
+            getUsers()
+        } catch (error) {
+            setUpdateMsg("Something went Wrong!")
+        }
     }
 
     return(
@@ -97,6 +106,8 @@ const Users = () => {
                     }
                 </ul>
                 <p>{message}</p>
+                <p>{delMsg}</p>
+                <p>{updateMsg}</p>
             </div>
         </>
     )
